@@ -1,6 +1,6 @@
 import { getOrders, updateOrderStatus } from "../api/order";
 import { useEffect, useState } from "react";
-import { Select, Table, message, Input, Flex } from "antd";
+import { Select, Table, message, Input } from "antd";
 
 function Orders() {
   const [order, setOrder] = useState<any>(null);
