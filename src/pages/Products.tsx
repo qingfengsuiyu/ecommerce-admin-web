@@ -32,6 +32,7 @@ function Products() {
   const [fileList, setFileList] = useState<any>([]);
 
   const handleSubmit = async (values: any) => {
+    console.log("提交的数据:", values);
     try {
       if (editingProduct) {
         await updateProduct(editingProduct._id, values);
@@ -102,15 +103,18 @@ function Products() {
     {
       title: "图片",
       dataIndex: "image",
-      render: (image: string) =>
-        image ? (
+      render: (image: string) => {
+        if (!image) return "-";
+        const src = image.startsWith("http")
+          ? image
+          : `https://ecommerce-admin-server.onrender.com${image}`;
+        return (
           <img
-            src={image}
+            src={src}
             style={{ width: 50, height: 50, objectFit: "cover" }}
           />
-        ) : (
-          "-"
-        ),
+        );
+      },
     },
     {
       title: "操作",
