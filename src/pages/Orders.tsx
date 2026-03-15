@@ -1,9 +1,17 @@
 import { getOrders, updateOrderStatus } from "../api/order";
 import { useEffect, useState } from "react";
-import { Select, Table, message } from "antd";
+import { Select, Table, message, Input, Flex } from "antd";
 
 function Orders() {
   const [order, setOrder] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const [keyword, setKeyword] = useState<string>("");
+  const [pagination, setPagination] = useState({
+    page: 1,
+    limit: 10,
+    total: 0,
+  });
 
   const columns = [
     { title: "订单号", dataIndex: "orderNo" },
@@ -49,21 +57,57 @@ function Orders() {
     try {
       await updateOrderStatus(id, status);
       message.success("状态更新成功");
-      fetchOrders();
+      fetchOrders(keyword);
     } catch (e) {}
   };
-  const fetchOrders = async () => {
-    const res: any = await getOrders();
+
+  const fetchOrders = async (search?: string, page = 1) => {
+    setLoading(true);
+    // 去后端获取数据
+    const res: any = await getOrders({ keyword: search, page, limit: 10 });
+    // 更新表格渲染所需要的数据
     setOrder(res.data);
-    console.log(res.data);
+    setPagination(res.pagination);
+    setLoading(false);
   };
   useEffect(() => {
     fetchOrders();
   }, []);
   return (
     <div>
-      <h1 style={{ marginBottom: "10px" }}>订单管理</h1>
-      <Table columns={columns} dataSource={order} rowKey="_id"></Table>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignContent: "center",
+          marginBottom: "10px",
+        }}
+      >
+        <h1 style={{ marginBottom: "10px" }}>订单管理</h1>
+        <Input.Search
+          placeholder="搜索订单号"
+          onSearch={(value) => {
+            setKeyword(value);
+            fetchOrders(value);
+          }}
+          style={{ width: 600, height: 40, marginLeft: "-10%" }}
+          size="large"
+          allowClear
+        />
+        <h1></h1>
+      </div>
+      <Table
+        columns={columns}
+        dataSource={order}
+        loading={loading}
+        rowKey="_id"
+        pagination={{
+          current: pagination.page,
+          pageSize: pagination.limit,
+          total: pagination.total,
+          onChange: (page) => fetchOrders(keyword, page),
+        }}
+      ></Table>
     </div>
   );
 }
