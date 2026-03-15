@@ -5,7 +5,17 @@ import {
   deleteProduct,
   updateProduct,
 } from "../api/products";
-import { Table, Button, Modal, Form, Input, message, Popconfirm } from "antd";
+import {
+  Table,
+  Button,
+  Modal,
+  Form,
+  Input,
+  message,
+  Popconfirm,
+  Upload,
+} from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 
 function Products() {
   const [products, setProducts] = useState<any[]>([]);
@@ -19,6 +29,7 @@ function Products() {
     limit: 10,
     total: 0,
   });
+  const [fileList, setFileList] = useState<any>([]);
 
   const handleSubmit = async (values: any) => {
     try {
@@ -39,6 +50,18 @@ function Products() {
     // 设置是编辑标记
     setEditingProduct(record);
     form.setFieldsValue(record);
+    if (record.image) {
+      setFileList([
+        {
+          uid: "-1",
+          name: "image",
+          status: "done",
+          url: `https://ecommerce-admin-server.onrender.com${record.image}`,
+        },
+      ]);
+    } else {
+      setFileList([]);
+    }
     setIsModalOpen(true);
   };
 
@@ -75,6 +98,19 @@ function Products() {
     {
       title: "描述",
       dataIndex: "description",
+    },
+    {
+      title: "图片",
+      dataIndex: "image",
+      render: (image: string) =>
+        image ? (
+          <img
+            src={`https://ecommerce-admin-server.onrender.com${image}`}
+            style={{ width: 50, height: 50, objectFit: "cover" }}
+          />
+        ) : (
+          "-"
+        ),
     },
     {
       title: "操作",
@@ -128,6 +164,7 @@ function Products() {
           onClick={() => {
             setEditingProduct(null);
             form.resetFields();
+            setFileList([]);
             setIsModalOpen(true);
           }}
         >
@@ -176,6 +213,29 @@ function Products() {
 
           <Form.Item label="描述" name="description">
             <Input.TextArea placeholder="请输入描述" />
+          </Form.Item>
+
+          <Form.Item label="商品图片" name="image">
+            <Upload
+              name="image"
+              action="https://ecommerce-admin-server.onrender.com/api/products/upload"
+              headers={{
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              }}
+              listType="picture-card"
+              maxCount={1}
+              fileList={fileList}
+              onChange={(info) => {
+                setFileList(info.fileList);
+                if (info.file.status === "done") {
+                  const imageUrl = info.file.response.data.imageUrl;
+                  form.setFieldsValue({ image: imageUrl });
+                  message.success("上传成功");
+                }
+              }}
+            >
+              {fileList.length < 1 && <PlusOutlined />}
+            </Upload>
           </Form.Item>
 
           <Form.Item>
