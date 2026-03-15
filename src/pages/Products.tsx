@@ -105,7 +105,7 @@ function Products() {
       render: (image: string) =>
         image ? (
           <img
-            src={`https://ecommerce-admin-server.onrender.com${image}`}
+            src={image}
             style={{ width: 50, height: 50, objectFit: "cover" }}
           />
         ) : (
