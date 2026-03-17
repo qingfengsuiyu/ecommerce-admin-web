@@ -37,7 +37,7 @@ function Dashboard() {
           series: [
             {
               type: "pie",
-              radius: "50%",
+              radius: "60%",
               data: stats.orderStatusStats.map((item: any) => ({
                 name: item._id,
                 value: item.count,

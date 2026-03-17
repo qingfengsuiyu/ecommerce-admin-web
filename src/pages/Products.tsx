@@ -32,13 +32,25 @@ function Products() {
   const [fileList, setFileList] = useState<any>([]);
 
   const handleSubmit = async (values: any) => {
-    console.log("提交的数据:", values);
+    let image = "";
+    if (fileList.length > 0) {
+      if (fileList[0].response) {
+        // 新上传的图片
+        image = fileList[0].response.data.imageUrl;
+      } else if (fileList[0].url) {
+        // 编辑时保留的旧图片
+        image = editingProduct?.image || "";
+      }
+    }
+
+    const submitData = { ...values, image };
+    console.log("提交的数据:", submitData);
     try {
       if (editingProduct) {
-        await updateProduct(editingProduct._id, values);
+        await updateProduct(editingProduct._id, submitData);
         message.success("更新成功");
       } else {
-        await createProduct(values);
+        await createProduct(submitData);
         message.success("添加成功");
       }
       setIsModalOpen(false);
@@ -48,21 +60,25 @@ function Products() {
   };
 
   const handleEdit = (record: any) => {
-    // 设置是编辑标记
     setEditingProduct(record);
     form.setFieldsValue(record);
     if (record.image) {
+      const url = record.image.startsWith("http")
+        ? record.image
+        : `https://ecommerce-admin-server.onrender.com${record.image}`;
       setFileList([
         {
           uid: "-1",
           name: "image",
           status: "done",
-          url: `https://ecommerce-admin-server.onrender.com${record.image}`,
+          url: url,
+          thumbUrl: url,
         },
       ]);
     } else {
       setFileList([]);
     }
+
     setIsModalOpen(true);
   };
 
@@ -111,7 +127,7 @@ function Products() {
         return (
           <img
             src={src}
-            style={{ width: 50, height: 50, objectFit: "cover" }}
+            style={{ width: 40, height: 40, objectFit: "cover" }}
           />
         );
       },
@@ -124,7 +140,6 @@ function Products() {
             type="link"
             onClick={() => {
               handleEdit(record);
-              setIsModalOpen(true);
             }}
           >
             编辑
@@ -180,6 +195,13 @@ function Products() {
         dataSource={products}
         rowKey="_id"
         loading={loading}
+        components={{
+          body: {
+            row: (props: any) => (
+              <tr {...props} style={{ height: 70 }} /> // 固定行高 60px
+            ),
+          },
+        }}
         pagination={{
           current: pagination.page,
           pageSize: pagination.limit,
@@ -197,6 +219,7 @@ function Products() {
           setEditingProduct(null);
         }}
         footer={null}
+        destroyOnClose
       >
         <Form layout="vertical" onFinish={handleSubmit} form={form}>
           <Form.Item
@@ -219,7 +242,7 @@ function Products() {
             <Input.TextArea placeholder="请输入描述" />
           </Form.Item>
 
-          <Form.Item label="商品图片" name="image">
+          <Form.Item label="商品图片">
             <Upload
               name="image"
               action="https://ecommerce-admin-server.onrender.com/api/products/upload"
@@ -232,8 +255,6 @@ function Products() {
               onChange={(info) => {
                 setFileList(info.fileList);
                 if (info.file.status === "done") {
-                  const imageUrl = info.file.response.data.imageUrl;
-                  form.setFieldsValue({ image: imageUrl });
                   message.success("上传成功");
                 }
               }}
