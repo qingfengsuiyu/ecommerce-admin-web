@@ -4,6 +4,9 @@ import { getUsers, updateUserRole } from "../api/users";
 
 function Users() {
   const [users, setUsers] = useState<any>(null);
+  // 获取用户id
+  const currUserId = localStorage.getItem("userId");
+  console.log(currUserId);
   const handleUsersChange = async (id: string, role: string) => {
     try {
       await updateUserRole(id, role);
@@ -22,6 +25,7 @@ function Users() {
           value={record.role}
           style={{ width: 120 }}
           onChange={(value) => handleUsersChange(record._id, value)}
+          disabled={record._id === currUserId}
           options={[
             { label: "管理员", value: "admin" },
             { label: "编辑者", value: "edit" },
