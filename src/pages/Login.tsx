@@ -2,6 +2,7 @@ import { Card, Form, Input, Button, message } from "antd";
 import { login } from "../api/auth";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [loading, setLoading] = useState(false);
@@ -62,6 +63,9 @@ function Login() {
               登录
             </Button>
           </Form.Item>
+          <div style={{ textAlign: "center" }}>
+            还没注册？<Link to="/register">去注册</Link>
+          </div>
         </Form>
       </Card>
     </div>

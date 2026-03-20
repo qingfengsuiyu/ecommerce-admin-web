@@ -5,6 +5,7 @@ import AdminLayout from "./components/AdminLayout";
 import Products from "./pages/Products";
 import Orders from "./pages/Orders";
 import Users from "./pages/Users";
+import Register from "./pages/Register";
 import AuthGuard from "./components/AuthGuard";
 
 function App() {
@@ -12,6 +13,8 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />}></Route>
+        <Route path="/register" element={<Register />}></Route>
+
         <Route
           path="/"
           element={
