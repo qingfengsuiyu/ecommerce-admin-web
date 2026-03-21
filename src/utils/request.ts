@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const request = axios.create({
-  // baseURL: "https://ecommerce-admin-server.onrender.com/api",
-  baseURL: "http://localhost:3000/api",
+  baseURL: "https://ecommerce-admin-server.onrender.com/api",
+  // baseURL: "http://localhost:3000/api",
   timeout: 60000, // 因为 Render 免费套餐休眠后第一次
 });
 
