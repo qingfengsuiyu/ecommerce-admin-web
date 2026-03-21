@@ -27,3 +27,8 @@ export const deleteProduct = (id: string) => {
 export const updateProduct = (id: string, data: any) => {
   return request.put(`/products/${id}`, data);
 };
+
+// 获取单个商品
+export const getProductById = (id: string) => {
+  return request.get(`/products/${id}`);
+};

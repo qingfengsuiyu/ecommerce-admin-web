@@ -1,6 +1,25 @@
-import { Card, Form, Input, Button } from "antd";
-import { Link } from "react-router-dom";
+import { Card, Form, Input, Button, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { register } from "../api/auth";
+
 function Register() {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const onFinish = async (value: any) => {
+    setLoading(true);
+    try {
+      // 收集数据
+      const res = await register(value);
+      navigate("/login");
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <div
@@ -14,7 +33,7 @@ function Register() {
         }}
       >
         <Card title="电商平台 - 用户注册" style={{ width: 400 }}>
-          <Form layout="vertical">
+          <Form layout="vertical" onFinish={onFinish}>
             <Form.Item
               label="用户名"
               name="username"
@@ -38,7 +57,7 @@ function Register() {
             </Form.Item>
 
             <Form.Item>
-              <Button type="primary" htmlType="submit" block>
+              <Button type="primary" htmlType="submit" block loading={loading}>
                 注册
               </Button>
             </Form.Item>

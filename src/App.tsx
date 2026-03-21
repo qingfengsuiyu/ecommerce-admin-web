@@ -7,6 +7,9 @@ import Orders from "./pages/Orders";
 import Users from "./pages/Users";
 import Register from "./pages/Register";
 import AuthGuard from "./components/AuthGuard";
+import ShopLayout from "./components/ShopLayout";
+import ShopHome from "./pages/ShopHome";
+import ShopDetail from "./pages/ShopDetail";
 
 function App() {
   return (
@@ -14,7 +17,6 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/register" element={<Register />}></Route>
-
         <Route
           path="/"
           element={
@@ -27,6 +29,10 @@ function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/users" element={<Users />} />
+        </Route>
+        <Route path="/shop" element={<ShopLayout />}>
+          <Route index element={<ShopHome />} />
+          <Route path=":id" element={<ShopDetail />} />
         </Route>
       </Routes>
     </BrowserRouter>

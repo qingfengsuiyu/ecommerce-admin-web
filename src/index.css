@@ -1,4 +1,37 @@
 * {
   padding: 0px;
   margin: 0px;
+  font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+}
+
+body {
+  background-image: url("https://freemind.pluskid.org/assets/images/bg-2.jpg");
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+.ant-layout {
+  background: transparent !important;
+}
+
+.ant-layout-content {
+  background: transparent !important;
+}
+
+.ant-layout-header {
+  background: transparent !important;
+}
+
+.ant-menu {
+  background: transparent !important;
+}
+
+.ant-menu-horizontal .ant-menu-item-selected::after,
+.ant-menu-horizontal .ant-menu-item:hover::after {
+  border-bottom-color: #1ca4d6 !important;
+}
+
+.ant-menu-horizontal .ant-menu-item-selected,
+.ant-menu-horizontal .ant-menu-item:hover {
+  color: #1ca4d6 !important;
 }
