@@ -5,15 +5,12 @@ import { useNavigate } from "react-router-dom";
 
 function ShopHome() {
   const [products, setProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(false);
       const res: any = await getProducts({ limit: 20 });
       setProducts(res.data);
-      setLoading(false);
     };
     fetchData();
   }, []);

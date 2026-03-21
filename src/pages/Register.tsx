@@ -1,4 +1,4 @@
-import { Card, Form, Input, Button, message } from "antd";
+import { Card, Form, Input, Button } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { register } from "../api/auth";

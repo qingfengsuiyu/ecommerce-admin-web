@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, Button, message, Tag } from "antd";
+import { Card, Button, message } from "antd";
 import { getProductById } from "../api/products";
 
 function ShopDetail() {
