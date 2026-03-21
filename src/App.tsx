@@ -17,8 +17,17 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/register" element={<Register />}></Route>
+
+        {/* 前台商城- 默认首页 */}
+        <Route path="/" element={<ShopLayout />}>
+          <Route index element={<ShopHome />} />
+          <Route path="cart" element={<div>购物车（待开发）</div>} />
+          <Route path=":id" element={<ShopDetail />} />
+        </Route>
+
+        {/* 后台管理 */}
         <Route
-          path="/"
+          path="/admin"
           element={
             <AuthGuard>
               <AdminLayout />
@@ -26,13 +35,9 @@ function App() {
           }
         >
           <Route index element={<Dashboard />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/users" element={<Users />} />
-        </Route>
-        <Route path="/shop" element={<ShopLayout />}>
-          <Route index element={<ShopHome />} />
-          <Route path=":id" element={<ShopDetail />} />
+          <Route path="products" element={<Products />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="users" element={<Users />} />
         </Route>
       </Routes>
     </BrowserRouter>

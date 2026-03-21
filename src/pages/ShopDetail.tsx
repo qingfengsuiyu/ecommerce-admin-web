@@ -23,7 +23,7 @@ function ShopDetail() {
     : "";
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px" }}>
-      <Button style={{ marginBottom: 16 }} onClick={() => navigate("/shop")}>
+      <Button style={{ marginBottom: 16 }} onClick={() => navigate("/")}>
         ←返回
       </Button>
       <Card>

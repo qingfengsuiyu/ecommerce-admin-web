@@ -32,7 +32,6 @@ function Login() {
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
-        background: "#f0f2f5",
       }}
     >
       <Card title="电商管理平台 - 登录" style={{ width: 400 }}>

@@ -34,7 +34,7 @@ function ShopLayout() {
                 cursor: "pointer",
                 color: "#1CA4D6",
               }}
-              onClick={() => navigate("/shop")}
+              onClick={() => navigate("/")}
             >
               XY电商
             </div>
@@ -43,8 +43,8 @@ function ShopLayout() {
               selectedKeys={[location.pathname]}
               onClick={({ key }) => navigate(key)}
               items={[
-                { key: "/shop", label: "商品首页" },
-                { key: "/shop/cart", label: "购物车" },
+                { key: "/", label: "商品首页" },
+                { key: "/cart", label: "购物车" },
               ]}
               style={{ border: "none", color: "##1A9AD0" }}
             />
@@ -65,6 +65,12 @@ function ShopLayout() {
                 登录
               </Button>
             )}
+            <Button
+              style={{ marginLeft: 16 }}
+              onClick={() => navigate("/admin")}
+            >
+              后台管理
+            </Button>
           </div>
         </div>
       </Layout.Header>

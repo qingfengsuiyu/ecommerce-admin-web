@@ -32,10 +32,10 @@ function AdminLayout() {
           selectedKeys={[location.pathname]}
           onClick={({ key }) => navigate(key)}
           items={[
-            { key: "/", label: "数据总览" },
-            { key: "/products", label: "商品管理" },
-            { key: "/orders", label: "订单管理" },
-            { key: "/users", label: "用户管理" },
+            { key: "/admin", label: "数据总览" },
+            { key: "/admin/products", label: "商品管理" },
+            { key: "/admin/orders", label: "订单管理" },
+            { key: "/admin/users", label: "用户管理" },
           ]}
         />
         <div

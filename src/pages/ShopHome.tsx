@@ -52,7 +52,7 @@ function ShopHome() {
                   </div>
                 )
               }
-              onClick={() => navigate(`/shop/${item._id}`)}
+              onClick={() => navigate(`/${item._id}`)}
             >
               <div
                 style={{
