@@ -63,7 +63,7 @@ function ShopHome() {
           style={{ cursor: "pointer", padding: "4px 12px" }}
           onClick={() => {
             setActiveCategory("");
-            fetchProducts();
+            fetchProducts("", keyword);
           }}
         >
           全部
