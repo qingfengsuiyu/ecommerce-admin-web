@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Card, Button, message } from "antd";
 import { getProductById } from "../api/products";
+import { useCart } from "../context/CartContext";
 
 function ShopDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState<any>(null);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -66,7 +68,10 @@ function ShopDetail() {
             <Button
               type="primary"
               size="large"
-              onClick={() => message.info("购物车功能下一步实现")}
+              onClick={() => {
+                addToCart(product);
+                message.success("已加入购物车");
+              }}
             >
               加入购物车
             </Button>

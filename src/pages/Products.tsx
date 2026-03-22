@@ -245,6 +245,7 @@ function Products() {
           <Form.Item label="商品图片">
             <Upload
               name="image"
+              // action="http://localhost:3000/api/products/upload"
               action="https://ecommerce-admin-server.onrender.com/api/products/upload"
               headers={{
                 Authorization: `Bearer ${localStorage.getItem("token")}`,

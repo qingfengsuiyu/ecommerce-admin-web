@@ -81,6 +81,23 @@ function ShopLayout() {
           background: "#f5f5f5",
         }}
       >
+        <p
+          style={{
+            maxWidth: 1200,
+            margin: "0 auto",
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 14,
+            color: "#ACB7BD",
+          }}
+        >
+          待到瑁珑树叶飘落,春天尚未到来之际,阿尔玟最终长眠在凯林阿姆洛斯山上.那就是她的绿色坟茔.
+          直到沧海桑田,她的全部生平都被后人彻底遗忘,而埃拉诺花与妮芙瑞迪尔花再也没有在大海以东绽放.
+          这就是故事的结尾,自南方传来便是这样.
+          随着暮星的陨落,本书不再叙述那些古时的日子.
+        </p>
         <Outlet />
       </Layout.Content>
     </Layout>
