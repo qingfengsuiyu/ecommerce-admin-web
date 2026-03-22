@@ -116,6 +116,11 @@ function Products() {
       dataIndex: "name",
     },
     {
+      title: "分类",
+      dataIndex: "category",
+      render: (category: any) => category?.name || "-",
+    },
+    {
       title: "价格",
       dataIndex: "price",
       render: (value: number) => `¥${value}`,

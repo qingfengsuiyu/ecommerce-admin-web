@@ -1,10 +1,13 @@
-import { Layout, Menu, Button } from "antd";
+import { Layout, Menu, Button, Badge } from "antd";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 
 function ShopLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const token = localStorage.getItem("token");
+  const { cartItems } = useCart();
 
   return (
     <Layout>
@@ -42,14 +45,18 @@ function ShopLayout() {
               mode="horizontal"
               selectedKeys={[location.pathname]}
               onClick={({ key }) => navigate(key)}
-              items={[
-                { key: "/", label: "商品首页" },
-                { key: "/cart", label: "购物车" },
-              ]}
+              items={[{ key: "/", label: "商品首页" }]}
               style={{ border: "none", color: "##1A9AD0" }}
             />
           </div>
-          <div>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+            <Badge count={cartItems.length} size="medium">
+              <ShoppingCartOutlined
+                style={{ fontSize: 22, cursor: "pointer" }}
+                onClick={() => navigate("/cart")}
+              />
+            </Badge>
+            <div style={{ marginRight: 10 }}></div>
             {token ? (
               <Button
                 onClick={() => {
@@ -65,12 +72,7 @@ function ShopLayout() {
                 登录
               </Button>
             )}
-            <Button
-              style={{ marginLeft: 16 }}
-              onClick={() => navigate("/admin")}
-            >
-              后台管理
-            </Button>
+            <Button onClick={() => navigate("/admin")}>后台管理</Button>
           </div>
         </div>
       </Layout.Header>

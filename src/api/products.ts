@@ -5,6 +5,7 @@ export const getProducts = (params?: {
   page?: number;
   limit?: number;
   keyword?: string;
+  category?: string;
 }) => {
   return request.get("/products", { params });
 };
