@@ -75,6 +75,16 @@ function ShopDetail() {
             >
               加入购物车
             </Button>
+            <Button
+              type="primary"
+              size="large"
+              style={{ marginLeft: 16 }}
+              onClick={() => {
+                navigate("/cart");
+              }}
+            >
+              去结算
+            </Button>
           </div>
         </div>
       </Card>

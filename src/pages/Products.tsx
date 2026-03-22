@@ -14,8 +14,10 @@ import {
   message,
   Popconfirm,
   Upload,
+  Select,
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { getCategories } from "../api/categories";
 
 function Products() {
   const [products, setProducts] = useState<any[]>([]);
@@ -30,6 +32,7 @@ function Products() {
     total: 0,
   });
   const [fileList, setFileList] = useState<any>([]);
+  const [categories, setCategories] = useState<any[]>([]);
 
   const handleSubmit = async (values: any) => {
     let image = "";
@@ -100,6 +103,11 @@ function Products() {
 
   useEffect(() => {
     fetchProducts();
+    const fetchCategories = async () => {
+      const res: any = await getCategories();
+      setCategories(res.data);
+    };
+    fetchCategories();
   }, []);
 
   const columns = [
@@ -228,6 +236,17 @@ function Products() {
             rules={[{ required: true, message: "请输入商品名称" }]}
           >
             <Input placeholder="请输入此商品名称" />
+          </Form.Item>
+
+          <Form.Item label="分类" name="category">
+            <Select
+              placeholder="请选择分类"
+              allowClear
+              options={categories.map((cat) => ({
+                label: cat.name,
+                value: cat._id,
+              }))}
+            />
           </Form.Item>
 
           <Form.Item
