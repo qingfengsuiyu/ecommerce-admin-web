@@ -1,4 +1,4 @@
-import { Layout, Menu, Button, Badge } from "antd";
+import { Layout, Menu, Button, Badge, Popconfirm } from "antd";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { ShoppingCartOutlined } from "@ant-design/icons";
@@ -58,15 +58,16 @@ function ShopLayout() {
             </Badge>
             <div style={{ marginRight: 10 }}></div>
             {token ? (
-              <Button
-                onClick={() => {
+              <Popconfirm
+                title="确定要退出吗？"
+                onConfirm={() => {
                   localStorage.removeItem("token");
                   localStorage.removeItem("userId");
                   navigate("/login");
                 }}
               >
-                退出
-              </Button>
+                <Button>退出</Button>
+              </Popconfirm>
             ) : (
               <Button type="primary" onClick={() => navigate("/login")}>
                 登录

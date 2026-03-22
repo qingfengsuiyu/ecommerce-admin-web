@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, Button, message } from "antd";
+import { Card, Button, message, InputNumber, Tag } from "antd";
 import { getProductById } from "../api/products";
 import { useCart } from "../context/CartContext";
 
 function ShopDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [product, setProduct] = useState<any>(null);
   const { addToCart } = useCart();
+  const [quantity, setQuantity] = useState(1);
+  const [product, setProduct] = useState<any>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,6 +53,11 @@ function ShopDetail() {
           </div>
           <div style={{ flex: 1 }}>
             <h1 style={{ marginBottom: 16 }}>{product.name}</h1>
+            {product.category && (
+              <Tag color="blue" style={{ marginBottom: 12 }}>
+                {product.category.name}
+              </Tag>
+            )}
             <div
               style={{
                 color: "#ff4d4f",
@@ -65,26 +71,39 @@ function ShopDetail() {
             <div style={{ color: "#666", marginBottom: 24 }}>
               {product.description || "暂无描述"}
             </div>
-            <Button
-              type="primary"
-              size="large"
-              onClick={() => {
-                addToCart(product);
-                message.success("已加入购物车");
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                marginBottom: 24,
               }}
             >
-              加入购物车
-            </Button>
-            <Button
-              type="primary"
-              size="large"
-              style={{ marginLeft: 16 }}
-              onClick={() => {
-                navigate("/cart");
-              }}
-            >
-              去结算
-            </Button>
+              <span>数量：</span>
+              <InputNumber
+                min={1}
+                value={quantity}
+                onChange={(val) => setQuantity(val as number)}
+              />
+            </div>
+
+            <div style={{ display: "flex", gap: 12 }}>
+              <Button
+                type="primary"
+                size="large"
+                onClick={() => {
+                  for (let i = 0; i < quantity; i++) {
+                    addToCart(product);
+                  }
+                  message.success(`已加入${quantity}件到购物车`);
+                }}
+              >
+                加入购物车
+              </Button>
+              <Button size="large" onClick={() => navigate("/cart")}>
+                去购物车
+              </Button>
+            </div>
           </div>
         </div>
       </Card>
