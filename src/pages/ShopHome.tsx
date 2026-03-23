@@ -11,6 +11,7 @@ function ShopHome() {
   const [activeCategory, setActiveCategory] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [keyword, setKeyword] = useState("");
+  const [searchValue, setSearchValue] = useState("");
 
   const fetchProducts = async (category?: string, search?: string) => {
     setLoading(true);
@@ -44,6 +45,8 @@ function ShopHome() {
       >
         <h2 style={{ margin: 0, color: "#1CA4D6" }}>全部商品</h2>
         <Input.Search
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
           placeholder="搜索商品"
           allowClear
           style={{ width: 400, height: 32 }}
@@ -63,7 +66,9 @@ function ShopHome() {
           style={{ cursor: "pointer", padding: "4px 12px" }}
           onClick={() => {
             setActiveCategory("");
-            fetchProducts("", keyword);
+            fetchProducts("", "");
+            setSearchValue(""); // 清掉输入框
+            setKeyword(""); // 清掉搜索词
           }}
         >
           全部
@@ -75,7 +80,7 @@ function ShopHome() {
             style={{ cursor: "pointer", padding: "4px 12px" }}
             onClick={() => {
               setActiveCategory(cat._id);
-              fetchProducts(cat._id);
+              fetchProducts(cat._id, searchValue);
             }}
           >
             {cat.name}

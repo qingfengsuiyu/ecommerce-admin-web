@@ -45,7 +45,10 @@ function ShopLayout() {
               mode="horizontal"
               selectedKeys={[location.pathname]}
               onClick={({ key }) => navigate(key)}
-              items={[{ key: "/", label: "商品首页" }]}
+              items={[
+                { key: "/", label: "商品首页" },
+                { key: "/orders", label: "我的订单" },
+              ]}
               style={{ border: "none", color: "##1A9AD0" }}
             />
           </div>
