@@ -18,6 +18,7 @@ import {
 } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { getCategories } from "../api/categories";
+import { BASE_URL } from "../utils/request";
 
 function Products() {
   const [products, setProducts] = useState<any[]>([]);
@@ -269,8 +270,7 @@ function Products() {
           <Form.Item label="商品图片">
             <Upload
               name="image"
-              // action="http://localhost:3000/api/products/upload"
-              action="https://ecommerce-admin-server.onrender.com/api/products/upload"
+              action={`${BASE_URL}/products/upload`}
               headers={{
                 Authorization: `Bearer ${localStorage.getItem("token")}`,
               }}

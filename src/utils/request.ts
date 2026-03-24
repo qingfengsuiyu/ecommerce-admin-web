@@ -1,9 +1,12 @@
 import axios from "axios";
 
+const BASE_URL = import.meta.env.DEV
+  ? "http://localhost:3000/api"
+  : "https://ecommerce-admin-server.onrender.com/api";
+
 const request = axios.create({
-  baseURL: "https://ecommerce-admin-server.onrender.com/api",
-  // baseURL: "http://localhost:3000/api",
-  timeout: 60000, // 因为 Render 免费套餐休眠后第一次
+  baseURL: BASE_URL,
+  timeout: 60000,
 });
 
 // 请求拦截器:每次请求自动带上token
@@ -27,4 +30,5 @@ request.interceptors.response.use(
   },
 );
 
+export { BASE_URL };
 export default request;
