@@ -1,6 +1,7 @@
 import { getOrders } from "../api/order";
 import { useEffect, useState } from "react";
 import { Select, Table, message, Input, Tag } from "antd";
+import { updateOrderStatus } from "../api/order";
 
 function Orders() {
   const [order, setOrder] = useState<any>(null);
