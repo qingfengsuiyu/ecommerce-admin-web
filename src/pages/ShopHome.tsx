@@ -10,7 +10,7 @@ function ShopHome() {
   const [categories, setCategories] = useState<any[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [keyword, setKeyword] = useState("");
+  // const [keyword, setKeyword] = useState("");
   const [searchValue, setSearchValue] = useState("");
 
   const fetchProducts = async (category?: string, search?: string) => {
@@ -51,7 +51,7 @@ function ShopHome() {
           allowClear
           style={{ width: 400, height: 32 }}
           onSearch={(value) => {
-            setKeyword(value);
+            // setKeyword(value);
             setActiveCategory("");
             fetchProducts("", value);
           }}
@@ -68,7 +68,7 @@ function ShopHome() {
             setActiveCategory("");
             fetchProducts("", "");
             setSearchValue(""); // 清掉输入框
-            setKeyword(""); // 清掉搜索词
+            // setKeyword(""); // 清掉搜索词
           }}
         >
           全部

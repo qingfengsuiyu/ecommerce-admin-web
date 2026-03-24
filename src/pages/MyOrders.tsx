@@ -27,7 +27,7 @@ function MyOrders() {
     },
   ];
   // 英文映射中文
-  const orderStatus = {
+  const orderStatus: Record<string, string> = {
     pending: "待支付",
     paid: "已支付",
     shipped: "运输中",
@@ -35,7 +35,7 @@ function MyOrders() {
     cancelled: "已取消",
   };
   // 状态映射颜色
-  const colorStatus = {
+  const colorStatus: Record<string, string> = {
     pending: "#FAC775",
     paid: "#B5D4F4",
     shipped: "#CECBF6",
