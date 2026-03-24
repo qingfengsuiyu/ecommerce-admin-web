@@ -9,6 +9,11 @@ export const getOrders = (params?: {
   return request.get("/orders", { params });
 };
 
+// 更新订单状态
+export const updateOrderStatus = (id: string, status: string) => {
+  return request.put(`/orders/${id}/status`, { status });
+};
+
 // 创建订单
 export const createOrder = (data: any) => {
   return request.post("/orders", data);
