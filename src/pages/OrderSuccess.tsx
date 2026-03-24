@@ -14,8 +14,8 @@ function OrderSuccess() {
           <Button type="primary" key="shop" onClick={() => navigate("/")}>
             继续购物
           </Button>,
-          <Button key="admin" onClick={() => navigate("/admin/orders")}>
-            查看订单
+          <Button key="orders" onClick={() => navigate("/orders")}>
+            查看我的订单
           </Button>,
         ]}
       />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Card, Button, message, InputNumber, Tag } from "antd";
-import { getProductById } from "../api/products";
+import { Card, Button, message, InputNumber, Tag, Row, Col } from "antd";
+import { getProductById, getProducts } from "../api/products";
 import { useCart } from "../context/CartContext";
 
 function ShopDetail() {
@@ -10,11 +10,20 @@ function ShopDetail() {
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<any>(null);
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const res: any = await getProductById(id as string);
       setProduct(res.data);
+
+      if (res.data.category) {
+        const relRes: any = await getProducts({
+          limit: 6,
+          category: res.data.category._id,
+        });
+        setRelatedProducts(relRes.data.filter((item: any) => item._id !== id));
+      }
     };
     fetchData();
   }, [id]);
@@ -107,6 +116,63 @@ function ShopDetail() {
           </div>
         </div>
       </Card>
+
+      {/* 商品推荐 */}
+      {relatedProducts.length > 0 && (
+        <div style={{ marginTop: 32 }}>
+          <h2 style={{ marginBottom: 16 }}>同类商品推荐</h2>
+          <Row gutter={[16, 16]}>
+            {relatedProducts.map((item) => (
+              <Col key={item._id} xs={8} sm={6} md={4}>
+                <Card
+                  hoverable
+                  cover={
+                    item.image ? (
+                      <img
+                        src={
+                          item.image.startsWith("http")
+                            ? item.image
+                            : `https://ecommerce-admin-server.onrender.com${item.image}`
+                        }
+                        style={{ height: 150, objectFit: "cover" }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          height: 150,
+                          background: "#f0f0f0",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "#999",
+                        }}
+                      >
+                        暂无图片
+                      </div>
+                    )
+                  }
+                  onClick={() => navigate(`/${item._id}`)}
+                >
+                  <div
+                    style={{
+                      fontWeight: "bold",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                    title={item.name}
+                  >
+                    {item.name}
+                  </div>
+                  <div style={{ color: "#ff4d4f", fontWeight: "bold" }}>
+                    ¥{item.price}
+                  </div>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        </div>
+      )}
     </div>
   );
 }

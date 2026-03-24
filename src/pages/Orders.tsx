@@ -1,17 +1,33 @@
-import { getOrders, updateOrderStatus } from "../api/order";
+import { getOrders } from "../api/order";
 import { useEffect, useState } from "react";
-import { Select, Table, message, Input } from "antd";
+import { Select, Table, message, Input, Tag } from "antd";
 
 function Orders() {
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
   const [keyword, setKeyword] = useState<string>("");
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 10,
     total: 0,
   });
+
+  // 英文映射中文
+  const orderStatus: Record<string, string> = {
+    pending: "待支付",
+    paid: "已支付",
+    shipped: "运输中",
+    completed: "已完成",
+    cancelled: "已取消",
+  };
+  // 状态映射颜色
+  const colorStatus: Record<string, string> = {
+    pending: "#FAC775",
+    paid: "#B5D4F4",
+    shipped: "#CECBF6",
+    completed: "#9FE1CB",
+    cancelled: "#D3D1C7",
+  };
 
   const columns = [
     { title: "订单号", dataIndex: "orderNo" },
@@ -28,6 +44,11 @@ function Orders() {
     {
       title: "状态",
       dataIndex: "status",
+      render: (status: string) => (
+        <Tag color={colorStatus[status]} style={{ color: "#333" }}>
+          {orderStatus[status]}
+        </Tag>
+      ),
     },
     {
       title: "创建时间",

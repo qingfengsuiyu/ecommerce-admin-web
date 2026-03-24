@@ -14,6 +14,7 @@ import Cart from "./pages/Cart";
 import OrderSuccess from "./pages/OrderSuccess";
 import { CartProvider } from "./context/CartContext";
 import MyOrders from "./pages/MyOrders";
+import OrderDetail from "./pages/OrderDetail";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="cart" element={<Cart />} />
             <Route path="order-success" element={<OrderSuccess />} />
             <Route path="orders" element={<MyOrders />} />
+            <Route path="orders/:id" element={<OrderDetail />} />
             <Route path=":id" element={<ShopDetail />} />
           </Route>
 
