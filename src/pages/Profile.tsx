@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Form, Input, Card, Button, message } from "antd";
 import { getMe, updateProfile } from "../api/auth";
 
