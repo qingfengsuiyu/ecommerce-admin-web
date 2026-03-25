@@ -48,7 +48,7 @@ function Products() {
     }
 
     const submitData = { ...values, image };
-    console.log("提交的数据:", submitData);
+
     try {
       if (editingProduct) {
         await updateProduct(editingProduct._id, submitData);

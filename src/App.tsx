@@ -16,6 +16,7 @@ import { CartProvider } from "./context/CartContext";
 import MyOrders from "./pages/MyOrders";
 import OrderDetail from "./pages/OrderDetail";
 import Profile from "./pages/Profile";
+import Categories from "./pages/Categories";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
             <Route path="products" element={<Products />} />
             <Route path="orders" element={<Orders />} />
             <Route path="users" element={<Users />} />
+            <Route path="categories" element={<Categories />} />
           </Route>
         </Routes>
       </BrowserRouter>

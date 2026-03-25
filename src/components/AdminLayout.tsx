@@ -36,6 +36,7 @@ function AdminLayout() {
             { key: "/admin/products", label: "商品管理" },
             { key: "/admin/orders", label: "订单管理" },
             { key: "/admin/users", label: "用户管理" },
+            { key: "/admin/categories", label: "分类管理" },
           ]}
         />
         <div
