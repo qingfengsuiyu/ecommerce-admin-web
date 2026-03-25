@@ -18,3 +18,11 @@ export const register = (data: {
 export const getMe = () => {
   return request.get("/auth/me");
 };
+
+export const updateProfile = (data: {
+  username?: string;
+  phone?: string;
+  address?: string;
+}) => {
+  return request.put("/auth/profile", data);
+};

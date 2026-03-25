@@ -76,6 +76,9 @@ function ShopLayout() {
                 登录
               </Button>
             )}
+            <Button size="small" onClick={() => navigate("/profile")}>
+              个人信息
+            </Button>
             <Button onClick={() => navigate("/admin")}>后台管理</Button>
           </div>
         </div>

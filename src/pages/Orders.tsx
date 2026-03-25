@@ -116,7 +116,6 @@ function Orders() {
           size="large"
           allowClear
         />
-        <h1></h1>
       </div>
       <Table
         columns={columns}
