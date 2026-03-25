@@ -4,6 +4,23 @@ import { useNavigate, useLocation, Outlet } from "react-router-dom";
 function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const role = localStorage.getItem("role");
+
+  const menuItems = [
+    { key: "/admin", label: "数据总览", roles: ["admin"] },
+    {
+      key: "/admin/products",
+      label: "商品管理",
+      roles: ["admin", "editor"],
+    },
+    { key: "/admin/categories", label: "分类管理", roles: ["admin"] },
+    { key: "/admin/orders", label: "订单管理", roles: ["admin"] },
+    { key: "/admin/users", label: "用户管理", roles: ["admin"] },
+  ];
+
+  const filteredItems = menuItems
+    .filter((item) => item.roles.includes(role || ""))
+    .map(({ key, label }) => ({ key, label }));
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -31,13 +48,7 @@ function AdminLayout() {
           mode="inline"
           selectedKeys={[location.pathname]}
           onClick={({ key }) => navigate(key)}
-          items={[
-            { key: "/admin", label: "数据总览" },
-            { key: "/admin/products", label: "商品管理" },
-            { key: "/admin/orders", label: "订单管理" },
-            { key: "/admin/users", label: "用户管理" },
-            { key: "/admin/categories", label: "分类管理" },
-          ]}
+          items={filteredItems}
         />
         <div
           style={{

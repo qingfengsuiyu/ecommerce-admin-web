@@ -9,6 +9,7 @@ function Categories() {
   const [modelOpen, setModelOpen] = useState<boolean>(false);
   const [categories, setCategories] = useState<any>([]);
   const [form] = Form.useForm();
+  const role = localStorage.getItem("role");
   const columns = [
     { title: "分类名称", dataIndex: "name" },
     {
@@ -19,14 +20,17 @@ function Categories() {
     {
       title: "操作",
       align: "center" as const,
-      render: (_: any, record: any) => (
-        <Popconfirm
-          title="确定要删除吗？"
-          onConfirm={() => handleDelete(record)}
-        >
-          <Button danger>删除</Button>
-        </Popconfirm>
-      ),
+      render: (_: any, record: any) =>
+        role === "admin" ? (
+          <Popconfirm
+            title="确定要删除吗？"
+            onConfirm={() => handleDelete(record)}
+          >
+            <Button danger>删除</Button>
+          </Popconfirm>
+        ) : (
+          <span style={{ color: "#999" }}>-</span>
+        ),
     },
   ];
 
@@ -64,14 +68,11 @@ function Categories() {
         }}
       >
         <h1>分类管理</h1>
-        <Button
-          type="primary"
-          onClick={() => {
-            setModelOpen(true);
-          }}
-        >
-          新增分类
-        </Button>
+        {role === "admin" && (
+          <Button type="primary" onClick={() => setModelOpen(true)}>
+            新增分类
+          </Button>
+        )}
       </div>
       <Table columns={columns} dataSource={categories} rowKey="_id"></Table>
       <Modal

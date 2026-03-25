@@ -34,6 +34,7 @@ function Products() {
   });
   const [fileList, setFileList] = useState<any>([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const role = localStorage.getItem("role");
 
   const handleSubmit = async (values: any) => {
     let image = "";
@@ -148,26 +149,29 @@ function Products() {
     },
     {
       title: "操作",
-      render: (_: any, record: any) => (
-        <div style={{ marginLeft: "-18px" }}>
-          <Button
-            type="link"
-            onClick={() => {
-              handleEdit(record);
-            }}
-          >
-            编辑
-          </Button>
-          <Popconfirm
-            title="确定要删除吗？"
-            onConfirm={() => handleDelete(record._id)}
-          >
-            <Button type="link" danger>
-              删除
+      render: (_: any, record: any) =>
+        role === "admin" || role === "editor" ? (
+          <div style={{ marginLeft: "-18px" }}>
+            <Button
+              type="link"
+              onClick={() => {
+                handleEdit(record);
+              }}
+            >
+              编辑
             </Button>
-          </Popconfirm>
-        </div>
-      ),
+            <Popconfirm
+              title="确定要删除吗？"
+              onConfirm={() => handleDelete(record._id)}
+            >
+              <Button type="link" danger>
+                删除
+              </Button>
+            </Popconfirm>
+          </div>
+        ) : (
+          <span style={{ color: "#999" }}>-</span>
+        ),
     },
   ];
 
@@ -192,17 +196,19 @@ function Products() {
           allowClear
           style={{ width: 600, marginRight: 16 }}
         ></Input.Search>
-        <Button
-          type="primary"
-          onClick={() => {
-            setEditingProduct(null);
-            form.resetFields();
-            setFileList([]);
-            setIsModalOpen(true);
-          }}
-        >
-          新增商品
-        </Button>
+        {(role === "admin" || role === "editor") && (
+          <Button
+            type="primary"
+            onClick={() => {
+              setEditingProduct(null);
+              form.resetFields();
+              setFileList([]);
+              setIsModalOpen(true);
+            }}
+          >
+            新增商品
+          </Button>
+        )}
       </div>
       <Table
         columns={columns}
@@ -233,7 +239,7 @@ function Products() {
           setEditingProduct(null);
         }}
         footer={null}
-        destroyOnClose
+        destroyOnHidden
       >
         <Form layout="vertical" onFinish={handleSubmit} form={form}>
           <Form.Item

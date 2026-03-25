@@ -14,8 +14,8 @@ function Login() {
     try {
       const res: any = await login(values);
       localStorage.setItem("token", res.data.token);
-      // 存储用户id
       localStorage.setItem("userId", res.data.id);
+      localStorage.setItem("role", res.data.role);
       message.success("登录成功");
       navigate("/");
     } catch (e) {
