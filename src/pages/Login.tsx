@@ -34,7 +34,12 @@ function Login() {
         height: "100vh",
       }}
     >
-      <Card title="电商管理平台 - 登录" style={{ width: 400 }}>
+      <Card
+        title="电商管理平台 - 登录"
+        style={{
+          width: 400,
+        }}
+      >
         <Form
           layout="vertical"
           onFinish={onFinish}

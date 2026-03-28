@@ -1,22 +1,67 @@
 import { useState, useEffect, useRef } from "react";
 import { getStarts } from "../api/dashboard";
+import { getOrders } from "../api/order";
 import { getProducts } from "../api/products";
-import { Card, Statistic, Row, Col } from "antd";
+import { Card, Statistic, Row, Col, Table, Tag } from "antd";
 import * as echarts from "echarts";
 
 function Dashboard() {
   const [stats, setStats] = useState<any>(null);
   const [products, setProducts] = useState<any>([]);
+  const [recentOrders, setRecentOrders] = useState<any[]>([]);
 
   const chartRef = useRef<HTMLDivElement>(null);
   const barChartRef = useRef<HTMLDivElement>(null);
+  const recentColumns = [
+    { title: "订单号", dataIndex: "orderNo" },
+    {
+      title: "用户",
+      dataIndex: "user",
+      render: (user: any) => user?.username || "-",
+    },
+    {
+      title: "金额",
+      dataIndex: "totalAmount",
+      render: (amount: number) => `¥${amount}`,
+    },
+    {
+      title: "状态",
+      dataIndex: "status",
+      render: (status: string) => {
+        const statusMap: Record<string, string> = {
+          pending: "待支付",
+          paid: "已支付",
+          shipped: "运输中",
+          completed: "已完成",
+          cancelled: "已取消",
+        };
+        const colorMap: Record<string, string> = {
+          pending: "orange",
+          paid: "blue",
+          shipped: "purple",
+          completed: "green",
+          cancelled: "default",
+        };
+        return <Tag color={colorMap[status]}>{statusMap[status]}</Tag>;
+      },
+    },
+    {
+      title: "时间",
+      dataIndex: "createdAt",
+      render: (time: string) => new Date(time).toLocaleString(),
+    },
+  ];
 
   useEffect(() => {
     const fetchData = async () => {
       const res: any = await getStarts();
       setStats(res.data);
+
       const prodRes: any = await getProducts({ limit: 10 });
       setProducts(prodRes.data);
+
+      const orderRes: any = await getOrders({ limit: 5 });
+      setRecentOrders(orderRes.data);
     };
     fetchData();
   }, []);
@@ -108,6 +153,16 @@ function Dashboard() {
           <div ref={barChartRef} style={{ height: 400 }}></div>
         </Col>
       </Row>
+
+      <Card title="最近订单" style={{ marginTop: 24 }}>
+        <Table
+          dataSource={recentOrders}
+          rowKey="_id"
+          pagination={false}
+          size="small"
+          columns={recentColumns}
+        ></Table>
+      </Card>
     </div>
   );
 }

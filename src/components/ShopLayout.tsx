@@ -1,7 +1,7 @@
-import { Layout, Menu, Button, Badge, Popconfirm } from "antd";
+import { Layout, Menu, Button, Badge, Dropdown } from "antd";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 
 function ShopLayout() {
   const navigate = useNavigate();
@@ -59,27 +59,50 @@ function ShopLayout() {
                 onClick={() => navigate("/cart")}
               />
             </Badge>
+
             <div style={{ marginRight: 10 }}></div>
             {token ? (
-              <Popconfirm
-                title="确定要退出吗？"
-                onConfirm={() => {
-                  localStorage.removeItem("token");
-                  localStorage.removeItem("userId");
-                  navigate("/login");
+              <Dropdown
+                menu={{
+                  items: [
+                    { key: "profile", label: "个人信息" },
+                    { key: "orders", label: "我的订单" },
+                    { key: "admin", label: "后台管理" },
+                    { type: "divider" },
+                    { key: "logout", label: "退出登录", danger: true },
+                  ],
+                  onClick: ({ key }) => {
+                    if (key === "logout") {
+                      localStorage.removeItem("token");
+                      localStorage.removeItem("userId");
+                      localStorage.removeItem("role");
+                      navigate("/login");
+                    } else if (key === "profile") {
+                      navigate("/profile");
+                    } else if (key === "orders") {
+                      navigate("/orders");
+                    } else if (key === "admin") {
+                      navigate("/admin");
+                    }
+                  },
                 }}
               >
-                <Button>退出</Button>
-              </Popconfirm>
+                <div
+                  style={{
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 6,
+                  }}
+                >
+                  <UserOutlined style={{ fontSize: 18 }} />
+                </div>
+              </Dropdown>
             ) : (
               <Button type="primary" onClick={() => navigate("/login")}>
                 登录
               </Button>
             )}
-            <Button size="small" onClick={() => navigate("/profile")}>
-              个人信息
-            </Button>
-            <Button onClick={() => navigate("/admin")}>后台管理</Button>
           </div>
         </div>
       </Layout.Header>

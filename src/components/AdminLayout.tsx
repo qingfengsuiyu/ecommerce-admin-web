@@ -1,5 +1,12 @@
 import { Layout, Menu, Button, Popconfirm } from "antd";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
+import {
+  DashboardOutlined,
+  ShoppingOutlined,
+  AppstoreOutlined,
+  OrderedListOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 
 function AdminLayout() {
   const navigate = useNavigate();
@@ -7,20 +14,41 @@ function AdminLayout() {
   const role = localStorage.getItem("role");
 
   const menuItems = [
-    { key: "/admin", label: "数据总览", roles: ["admin"] },
+    {
+      key: "/admin",
+      label: "数据总览",
+      roles: ["admin"],
+      icon: <DashboardOutlined />,
+    },
     {
       key: "/admin/products",
       label: "商品管理",
-      roles: ["admin", "editor"],
+      roles: ["admin", "editor", "viewer"],
+      icon: <ShoppingOutlined />,
     },
-    { key: "/admin/categories", label: "分类管理", roles: ["admin"] },
-    { key: "/admin/orders", label: "订单管理", roles: ["admin"] },
-    { key: "/admin/users", label: "用户管理", roles: ["admin"] },
+    {
+      key: "/admin/categories",
+      label: "分类管理",
+      roles: ["admin"],
+      icon: <AppstoreOutlined />,
+    },
+    {
+      key: "/admin/orders",
+      label: "订单管理",
+      roles: ["admin"],
+      icon: <OrderedListOutlined />,
+    },
+    {
+      key: "/admin/users",
+      label: "用户管理",
+      roles: ["admin"],
+      icon: <UserOutlined />,
+    },
   ];
 
   const filteredItems = menuItems
     .filter((item) => item.roles.includes(role || ""))
-    .map(({ key, label }) => ({ key, label }));
+    .map(({ key, label, icon }) => ({ key, label, icon }));
 
   const handleLogout = () => {
     localStorage.removeItem("token");
