@@ -1,6 +1,6 @@
 import { getOrders } from "../api/order";
 import { useEffect, useState } from "react";
-import { Select, Table, message, Input, Tag, Button, Popconfirm } from "antd";
+import { Table, message, Input, Tag, Button, Popconfirm } from "antd";
 import { updateOrderStatus } from "../api/order";
 
 function Orders() {
