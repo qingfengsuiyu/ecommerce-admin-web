@@ -10,17 +10,36 @@ function ShopHome() {
   const [categories, setCategories] = useState<any[]>([]);
   const [activeCategory, setActiveCategory] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  // const [keyword, setKeyword] = useState("");
   const [searchValue, setSearchValue] = useState("");
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
-  const fetchProducts = async (category?: string, search?: string) => {
+  const fetchProducts = async (
+    category?: string,
+    search?: string,
+    pageNum = 1,
+  ) => {
+    if (loading) return;
     setLoading(true);
     const res: any = await getProducts({
-      limit: 20,
+      limit: 18,
       category,
       keyword: search,
+      page: pageNum,
     });
-    setProducts(res.data);
+    if (pageNum === 1) {
+      setProducts(res.data);
+    } else {
+      setProducts((prev) => {
+        const existingIds = new Set(prev.map((item: any) => item._id));
+        const newItems = res.data.filter(
+          (item: any) => !existingIds.has(item._id),
+        );
+        return [...prev, ...newItems];
+      });
+    }
+    setHasMore(res.data.length === 18);
+    setPage(pageNum);
     setLoading(false);
   };
 
@@ -32,6 +51,30 @@ function ShopHome() {
     };
     fetchCats();
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const fullHeight = document.documentElement.scrollHeight;
+      // 距离底部不到 100px
+      if (fullHeight - (scrollTop + windowHeight) < 100) {
+        if (!loading && hasMore) {
+          fetchProducts(activeCategory, searchValue, page + 1);
+        }
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    // 如果内容不够高，自动加载更多
+    if (
+      document.documentElement.scrollHeight <= window.innerHeight &&
+      hasMore &&
+      !loading
+    ) {
+      fetchProducts(activeCategory, searchValue, page + 1);
+    }
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [loading, hasMore, page, activeCategory, searchValue, fetchProducts]);
 
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto" }}>
@@ -51,9 +94,10 @@ function ShopHome() {
           allowClear
           style={{ width: 400, height: 32 }}
           onSearch={(value) => {
-            // setKeyword(value);
             setActiveCategory("");
-            fetchProducts("", value);
+            setPage(1);
+            setHasMore(true);
+            fetchProducts("", value, 1);
           }}
         />
       </div>
@@ -66,9 +110,10 @@ function ShopHome() {
           style={{ cursor: "pointer", padding: "4px 12px" }}
           onClick={() => {
             setActiveCategory("");
-            fetchProducts("", "");
-            setSearchValue(""); // 清掉输入框
-            // setKeyword(""); // 清掉搜索词
+            setSearchValue("");
+            setPage(1);
+            setHasMore(true);
+            fetchProducts("", "", 1);
           }}
         >
           全部
@@ -80,7 +125,9 @@ function ShopHome() {
             style={{ cursor: "pointer", padding: "4px 12px" }}
             onClick={() => {
               setActiveCategory(cat._id);
-              fetchProducts(cat._id, searchValue);
+              setPage(1);
+              setHasMore(true);
+              fetchProducts(cat._id, searchValue, 1);
             }}
           >
             {cat.name}

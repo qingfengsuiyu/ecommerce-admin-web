@@ -1,6 +1,6 @@
 import { getOrders } from "../api/order";
 import { useEffect, useState } from "react";
-import { Select, Table, message, Input, Tag } from "antd";
+import { Select, Table, message, Input, Tag, Button, Popconfirm } from "antd";
 import { updateOrderStatus } from "../api/order";
 
 function Orders() {
@@ -58,19 +58,40 @@ function Orders() {
     },
     {
       title: "操作",
+      align: "center" as const,
       render: (_: any, record: any) => (
-        <Select
-          value={record.status}
-          style={{ width: 120 }}
-          onChange={(value) => handleStatusChange(record._id, value)}
-          options={[
-            { label: "待支付", value: "pending" },
-            { label: "已支付", value: "paid" },
-            { label: "已发货", value: "shipped" },
-            { label: "已完成", value: "completed" },
-            { label: "已取消", value: "cancelled" },
-          ]}
-        />
+        <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
+          {record.status === "paid" && (
+            <Button
+              type="primary"
+              size="small"
+              onClick={() => handleStatusChange(record._id, "shipped")}
+            >
+              发货
+            </Button>
+          )}
+          {record.status === "shipped" && (
+            <Button
+              size="small"
+              onClick={() => handleStatusChange(record._id, "completed")}
+            >
+              确认完成
+            </Button>
+          )}
+          {record.status === "pending" && (
+            <Popconfirm
+              title="确定要取消此订单吗？"
+              onConfirm={() => handleStatusChange(record._id, "cancelled")}
+            >
+              <Button size="small" danger>
+                取消
+              </Button>
+            </Popconfirm>
+          )}
+          {(record.status === "completed" || record.status === "cancelled") && (
+            <span style={{ color: "#999" }}>-</span>
+          )}
+        </div>
       ),
     },
   ];
