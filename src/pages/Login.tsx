@@ -44,7 +44,7 @@ function Login() {
           layout="vertical"
           onFinish={onFinish}
           initialValues={{
-            email: "xiaoyi@test.com",
+            email: "xiaoyihao2016@gmail.com",
             password: "123456",
           }}
         >

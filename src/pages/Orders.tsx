@@ -13,6 +13,8 @@ function Orders() {
     total: 0,
   });
 
+  const [actionLoading, setActionLoading] = useState<string>("");
+
   // 英文映射中文
   const orderStatus: Record<string, string> = {
     pending: "待支付",
@@ -65,6 +67,7 @@ function Orders() {
             <Button
               type="primary"
               size="small"
+              loading={actionLoading === record._id}
               onClick={() => handleStatusChange(record._id, "shipped")}
             >
               发货
@@ -98,10 +101,16 @@ function Orders() {
 
   const handleStatusChange = async (id: string, status: string) => {
     try {
+      setActionLoading(id);
       await updateOrderStatus(id, status);
-      message.success("状态更新成功");
-      fetchOrders(keyword);
-    } catch (e) {}
+      message.success(
+        status === "shipped" ? "发货成功，邮件已发送" : "状态更新成功",
+      );
+      fetchOrders();
+    } catch (e) {
+    } finally {
+      setActionLoading("");
+    }
   };
 
   const fetchOrders = async (search?: string, page = 1) => {
