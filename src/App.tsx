@@ -17,6 +17,7 @@ import MyOrders from "./pages/MyOrders";
 import OrderDetail from "./pages/OrderDetail";
 import Profile from "./pages/Profile";
 import Categories from "./pages/Categories";
+import CardKeys from "./pages/CardKeys";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
             <Route path="orders" element={<Orders />} />
             <Route path="users" element={<Users />} />
             <Route path="categories" element={<Categories />} />
+            <Route path="cardkeys" element={<CardKeys />} />
           </Route>
         </Routes>
       </BrowserRouter>

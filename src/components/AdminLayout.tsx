@@ -6,6 +6,7 @@ import {
   AppstoreOutlined,
   OrderedListOutlined,
   UserOutlined,
+  IdcardOutlined,
 } from "@ant-design/icons";
 
 function AdminLayout() {
@@ -43,6 +44,12 @@ function AdminLayout() {
       label: "用户管理",
       roles: ["admin"],
       icon: <UserOutlined />,
+    },
+    {
+      key: "/admin/cardkeys",
+      label: "卡密管理",
+      roles: ["admin"],
+      icon: <IdcardOutlined />,
     },
   ];
 
