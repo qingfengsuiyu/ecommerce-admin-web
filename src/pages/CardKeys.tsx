@@ -46,7 +46,7 @@ function CardKeys() {
     {
       title: "操作",
       render: (_: any, row: any) => (
-        <Button type="primary" onClick={(val: any) => handleUpdate(row._id)}>
+        <Button type="primary" onClick={() => handleUpdate(row._id)}>
           退货
         </Button>
       ),
@@ -128,7 +128,7 @@ function CardKeys() {
                     .toLowerCase()
                     .includes(input.toLowerCase()),
               }}
-              options={products.map((item) => ({
+              options={products.map((item: any) => ({
                 label: item.name,
                 value: item._id,
               }))}
