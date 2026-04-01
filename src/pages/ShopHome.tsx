@@ -13,6 +13,8 @@ function ShopHome() {
   const [searchValue, setSearchValue] = useState("");
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  // 进行移动端适配
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const fetchProducts = async (
     category?: string,
@@ -76,13 +78,24 @@ function ShopHome() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading, hasMore, page, activeCategory, searchValue, fetchProducts]);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+      {/* 移动端适配 */}
       <div
         style={{
           display: "flex",
+          flexDirection: isMobile ? "column" : "row", // 手机纵向，电脑横向
+          gap: isMobile ? 8 : 0,
+          alignItems: isMobile ? "stretch" : "center",
+
           justifyContent: "space-between",
-          alignItems: "center",
           marginBottom: 16,
         }}
       >
@@ -92,7 +105,7 @@ function ShopHome() {
           onChange={(e) => setSearchValue(e.target.value)}
           placeholder="搜索商品"
           allowClear
-          style={{ width: 400, height: 32 }}
+          style={{ width: isMobile ? "100%" : 400, height: 32 }}
           onSearch={(value) => {
             setActiveCategory("");
             setPage(1);

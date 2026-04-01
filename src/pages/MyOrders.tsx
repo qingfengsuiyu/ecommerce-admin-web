@@ -6,11 +6,23 @@ import { useNavigate } from "react-router-dom";
 function MyOrders() {
   const [order, setOrder] = useState<any>(null);
   const navigate = useNavigate();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const columns = [
     {
       title: "订单号",
       dataIndex: "orderNo",
+      // 手机上截短订单号显示
+      render: (orderNo: string) =>
+        isMobile ? "..." + orderNo.slice(-8) : orderNo,
     },
     {
       title: "总金额",
@@ -32,6 +44,8 @@ function MyOrders() {
       title: "下单时间",
       dataIndex: "createdAt",
       align: "center" as const,
+      // 手机上隐藏这列
+      responsive: ["md"] as any,
       render: (time: string) => new Date(time).toLocaleString(),
     },
     {
@@ -40,13 +54,14 @@ function MyOrders() {
         <div
           style={{
             display: "flex",
-            gap: 8,
+            gap: 4,
             alignItems: "center",
+            flexWrap: "wrap",
             marginLeft: -16,
           }}
         >
           <Button type="link" onClick={() => navigate(`/orders/${record._id}`)}>
-            查看详情
+            {isMobile ? "查看" : "查看详情"}
           </Button>
           {record.status === "pending" && (
             <>

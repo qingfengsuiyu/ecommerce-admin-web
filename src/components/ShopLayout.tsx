@@ -2,13 +2,23 @@ import { Layout, Menu, Button, Badge, Dropdown } from "antd";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
 
 function ShopLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const token = localStorage.getItem("token");
   const { cartItems } = useCart();
+  // 进行移动端适配
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   return (
     <Layout>
       <Layout.Header
@@ -17,6 +27,9 @@ function ShopLayout() {
           alignItems: "center",
           justifyContent: "center",
           padding: "0 40px",
+          height: isMobile ? "auto" : 64, // 手机上自动高度
+          paddingTop: isMobile ? 8 : 0,
+          paddingBottom: isMobile ? 8 : 0,
         }}
       >
         <div
@@ -25,22 +38,31 @@ function ShopLayout() {
             width: "100%",
             display: "flex",
             justifyContent: "space-between",
-            alignItems: "center",
+            alignItems: isMobile ? "flex-start" : "center",
+            flexDirection: isMobile ? "column" : "row",
           }}
         >
-          <div style={{ display: "flex", alignItems: "center" }}>
-            <div
-              style={{
-                fontSize: 24,
-                fontWeight: "bold",
-                marginRight: 40,
-                cursor: "pointer",
-                color: "#1CA4D6",
-              }}
-              onClick={() => navigate("/")}
-            >
-              XY电商
-            </div>
+          <div
+            style={{
+              marginTop: "10px",
+              fontSize: isMobile ? 18 : 24,
+              fontWeight: "bold",
+              cursor: "pointer",
+              color: "#1CA4D6",
+              marginLeft: isMobile ? -10 : 0,
+            }}
+            onClick={() => navigate("/")}
+          >
+            XY电商
+          </div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: isMobile ? "100%" : "auto",
+            }}
+          >
             <Menu
               mode="horizontal"
               selectedKeys={[location.pathname]}
@@ -49,60 +71,67 @@ function ShopLayout() {
                 { key: "/", label: "商品首页" },
                 { key: "/orders", label: "我的订单" },
               ]}
-              style={{ border: "none", color: "##1A9AD0" }}
+              style={{
+                border: "none",
+                color: "##1A9AD0",
+                flex: "none",
+                minWidth: 0,
+                marginLeft: isMobile ? -30 : 0, // 手机上往左移抵消默认padding
+              }}
             />
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-            <Badge count={cartItems.length} size="medium">
-              <ShoppingCartOutlined
-                style={{ fontSize: 22, cursor: "pointer" }}
-                onClick={() => navigate("/cart")}
-              />
-            </Badge>
 
-            <div style={{ marginRight: 10 }}></div>
-            {token ? (
-              <Dropdown
-                menu={{
-                  items: [
-                    { key: "profile", label: "个人信息" },
-                    { key: "orders", label: "我的订单" },
-                    { key: "admin", label: "后台管理" },
-                    { type: "divider" },
-                    { key: "logout", label: "退出登录", danger: true },
-                  ],
-                  onClick: ({ key }) => {
-                    if (key === "logout") {
-                      localStorage.removeItem("token");
-                      localStorage.removeItem("userId");
-                      localStorage.removeItem("role");
-                      navigate("/login");
-                    } else if (key === "profile") {
-                      navigate("/profile");
-                    } else if (key === "orders") {
-                      navigate("/orders");
-                    } else if (key === "admin") {
-                      navigate("/admin");
-                    }
-                  },
-                }}
-              >
-                <div
-                  style={{
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
+            <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+              <Badge count={cartItems.length} size="medium">
+                <ShoppingCartOutlined
+                  style={{ fontSize: 22, cursor: "pointer" }}
+                  onClick={() => navigate("/cart")}
+                />
+              </Badge>
+
+              <div style={{ marginRight: 10 }}></div>
+              {token ? (
+                <Dropdown
+                  menu={{
+                    items: [
+                      { key: "profile", label: "个人信息" },
+                      { key: "orders", label: "我的订单" },
+                      { key: "admin", label: "后台管理" },
+                      { type: "divider" },
+                      { key: "logout", label: "退出登录", danger: true },
+                    ],
+                    onClick: ({ key }) => {
+                      if (key === "logout") {
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("userId");
+                        localStorage.removeItem("role");
+                        navigate("/login");
+                      } else if (key === "profile") {
+                        navigate("/profile");
+                      } else if (key === "orders") {
+                        navigate("/orders");
+                      } else if (key === "admin") {
+                        navigate("/admin");
+                      }
+                    },
                   }}
                 >
-                  <UserOutlined style={{ fontSize: 18 }} />
-                </div>
-              </Dropdown>
-            ) : (
-              <Button type="primary" onClick={() => navigate("/login")}>
-                登录
-              </Button>
-            )}
+                  <div
+                    style={{
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 6,
+                    }}
+                  >
+                    <UserOutlined style={{ fontSize: 18 }} />
+                  </div>
+                </Dropdown>
+              ) : (
+                <Button type="primary" onClick={() => navigate("/login")}>
+                  登录
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </Layout.Header>
@@ -123,6 +152,7 @@ function ShopLayout() {
             alignItems: "center",
             marginBottom: 14,
             color: "#ACB7BD",
+            marginTop: isMobile ? -20 : 0,
           }}
         >
           待到瑁珑树叶飘落,春天尚未到来之际,阿尔玟最终长眠在凯林阿姆洛斯山上.那就是她的绿色坟茔.

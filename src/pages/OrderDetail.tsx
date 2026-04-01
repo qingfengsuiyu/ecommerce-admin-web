@@ -8,6 +8,8 @@ function OrderDetail() {
   const navigate = useNavigate();
   const [order, setOrder] = useState<any>(null);
 
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
   const orderStatus: Record<string, string> = {
     pending: "待支付",
     paid: "已支付",
@@ -32,6 +34,14 @@ function OrderDetail() {
   useEffect(() => {
     fetchOrder();
   }, [id]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handlePay = async () => {
     try {
@@ -73,14 +83,16 @@ function OrderDetail() {
           ) : (
             <div
               style={{
-                width: 50,
-                height: 50,
+                width: isMobile ? 40 : 50,
+                height: isMobile ? 40 : 50,
                 background: "#f0f0f0",
                 borderRadius: 4,
               }}
             />
           )}
-          <span>{record.product?.name || "商品已删除"}</span>
+          <span>
+            {(record.product?.name).slice(0, 8) + "..." || "商品已删除"}
+          </span>
         </div>
       ),
     },
@@ -98,6 +110,7 @@ function OrderDetail() {
     {
       title: "小计",
       align: "center" as const,
+      responsive: ["md"] as any, // 手机上隐藏
       render: (_: any, record: any) => (
         <span style={{ color: "#ff4d4f", fontWeight: "bold" }}>
           ¥{record.price * record.quantity}
@@ -106,7 +119,13 @@ function OrderDetail() {
     },
   ];
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px" }}>
+    <div
+      style={{
+        maxWidth: 1200,
+        margin: "0 auto",
+        padding: isMobile ? "0" : "0 40px",
+      }}
+    >
       <Button style={{ marginBottom: 16 }} onClick={() => navigate("/orders")}>
         订单列表
       </Button>
