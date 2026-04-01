@@ -2,11 +2,34 @@ import { Table, Button, InputNumber, message, Popconfirm } from "antd";
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { createOrder } from "../api/order";
-
+import { useEffect, useState } from "react";
 function Cart() {
   const { cartItems, removeFromCart, updateQuantity, clearCart, totalAmount } =
     useCart();
   const navigate = useNavigate();
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  const handleCheckout = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      message.warning("请先登录!");
+      navigate("/login");
+      return;
+    }
+    try {
+      const orderProducts = cartItems.map((item) => ({
+        product: item._id,
+        quantity: item.quantity,
+        price: item.price,
+      }));
+      await createOrder({ products: orderProducts });
+      message.success("下单成功！");
+      clearCart();
+      navigate("/order-success");
+    } catch (e) {}
+  };
+
   const columns = [
     {
       title: "商品",
@@ -21,8 +44,8 @@ function Cart() {
                   : `https://ecommerce-admin-server.onrender.com${record.image}`
               }
               style={{
-                width: 50,
-                height: 50,
+                width: isMobile ? 50 : 60,
+                height: isMobile ? 40 : 50,
                 objectFit: "cover",
                 borderRadius: 4,
               }}
@@ -37,7 +60,9 @@ function Cart() {
               }}
             />
           )}
-          <span>{name}</span>
+          <span style={{ display: "inline-block", minWidth: "50px" }}>
+            {isMobile ? name.slice(0, 16) + ".." : name}
+          </span>
         </div>
       ),
     },
@@ -52,13 +77,16 @@ function Cart() {
       render: (quantity: number, record: any) => (
         <InputNumber
           min={1}
+          size="small"
           value={quantity}
+          style={{ width: 50 }}
           onChange={(value) => updateQuantity(record._id, value as number)}
         />
       ),
     },
     {
       title: "小计",
+      responsive: ["md"] as any, // 手机上隐藏
       render: (_: any, record: any) => (
         <span style={{ color: "#ff4d4f", fontWeight: "bold" }}>
           ¥{record.price * record.quantity}
@@ -80,25 +108,13 @@ function Cart() {
     },
   ];
 
-  const handleCheckout = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      message.warning("请先登录!");
-      navigate("/login");
-      return;
-    }
-    try {
-      const orderProducts = cartItems.map((item) => ({
-        product: item._id,
-        quantity: item.quantity,
-        price: item.price,
-      }));
-      await createOrder({ products: orderProducts });
-      message.success("下单成功！");
-      clearCart();
-      navigate("/order-success");
-    } catch (e) {}
-  };
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
   return (
     <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 10px" }}>
       <h2 style={{ marginBottom: 16 }}>购物车</h2>
@@ -120,26 +136,46 @@ function Cart() {
           <div
             style={{
               display: "flex",
+              flexDirection: isMobile ? "column" : "row",
               justifyContent: "space-between",
-              alignItems: "center",
+              alignItems: isMobile ? "stretch" : "center",
+              gap: isMobile ? 12 : 0,
               marginTop: 24,
               padding: "16px 0",
             }}
           >
             <Popconfirm title="确定要清空购物车吗？" onConfirm={clearCart}>
-              <Button danger>清空购物车</Button>
+              <Button danger block={isMobile}>
+                清空购物车
+              </Button>
             </Popconfirm>
-            <div style={{ display: "flex", alignItems: "center", gap: 24 }}>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: isMobile ? "space-between" : "flex-end",
+                gap: 24,
+              }}
+            >
               <span style={{ fontSize: 18 }}>
                 合计：
                 <span
-                  style={{ color: "#ff4d4f", fontSize: 24, fontWeight: "bold" }}
+                  style={{
+                    color: "#ff4d4f",
+                    fontSize: isMobile ? 18 : 24,
+                    fontWeight: "bold",
+                  }}
                 >
                   ¥{totalAmount}
                 </span>
               </span>
-              <Button type="primary" size="large" onClick={handleCheckout}>
-                去结算
+              <Button
+                type="primary"
+                size={isMobile ? "small" : "large"}
+                onClick={handleCheckout}
+              >
+                结算
               </Button>
             </div>
           </div>

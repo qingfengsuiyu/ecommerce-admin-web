@@ -5,12 +5,13 @@ import { getProductById, getProducts } from "../api/products";
 import { useCart } from "../context/CartContext";
 
 function ShopDetail() {
-  const { id } = useParams();
   const navigate = useNavigate();
+  const { id } = useParams();
   const { addToCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [product, setProduct] = useState<any>(null);
   const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,27 +28,55 @@ function ShopDetail() {
     };
     fetchData();
   }, [id]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   if (!product) return <div>加载中...</div>;
   const imgSrc = product.image
     ? product.image.startsWith("http")
       ? product.image
       : `https://ecommerce-admin-server.onrender.com${product.image}`
     : "";
+
   return (
-    <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 40px" }}>
+    <div
+      style={{
+        maxWidth: 1200,
+        margin: "0 auto",
+        padding: isMobile ? "0" : "0 40px",
+      }}
+    >
       <Button style={{ marginBottom: 16 }} onClick={() => navigate("/")}>
         ←返回
       </Button>
       <Card>
-        <div style={{ display: "flex", gap: 32 }}>
-          <div style={{ width: 360 }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: isMobile ? "column" : "row", // 手机纵向
+            gap: 32,
+          }}
+        >
+          {/* 图片 */}
+          <div style={{ width: isMobile ? "100%" : 360 }}>
             {imgSrc ? (
-              <img src={imgSrc} style={{ width: "100%", borderRadius: 8 }} />
+              <img
+                src={imgSrc}
+                style={{
+                  width: "100%", // 手机上占满宽度
+                  borderRadius: 8,
+                }}
+              />
             ) : (
               <div
                 style={{
-                  width: "100%",
-                  height: 300,
+                  width: isMobile ? "100px" : "100%",
                   background: "#f0f0f0",
                   display: "flex",
                   alignItems: "center",
@@ -60,26 +89,30 @@ function ShopDetail() {
               </div>
             )}
           </div>
+
           <div style={{ flex: 1 }}>
-            <h1 style={{ marginBottom: 16 }}>{product.name}</h1>
+            <h3 style={{ marginBottom: 16 }}>{product.name}</h3>
             {product.category && (
               <Tag color="blue" style={{ marginBottom: 12 }}>
                 {product.category.name}
               </Tag>
             )}
+
             <div
               style={{
                 color: "#ff4d4f",
-                fontSize: 28,
+                fontSize: isMobile ? 18 : 28,
                 fontWeight: "bold",
                 marginBottom: 16,
               }}
             >
               ¥{product.price}
             </div>
+
             <div style={{ color: "#666", marginBottom: 24 }}>
               {product.description || "暂无描述"}
             </div>
+
             <div
               style={{
                 display: "flex",
@@ -88,10 +121,14 @@ function ShopDetail() {
                 marginBottom: 24,
               }}
             >
-              <span>数量：</span>
+              <span style={{ minWidth: "50px", display: "inline-block" }}>
+                数量：
+              </span>
               <InputNumber
                 min={1}
                 value={quantity}
+                size={isMobile ? "small" : "large"}
+                style={isMobile ? { width: 60 } : {}}
                 onChange={(val) => setQuantity(val as number)}
               />
             </div>
@@ -100,6 +137,7 @@ function ShopDetail() {
               <Button
                 type="primary"
                 size="large"
+                style={{ flex: isMobile ? 1 : "none" }}
                 onClick={() => {
                   for (let i = 0; i < quantity; i++) {
                     addToCart(product);
@@ -109,7 +147,12 @@ function ShopDetail() {
               >
                 加入购物车
               </Button>
-              <Button size="large" onClick={() => navigate("/cart")}>
+
+              <Button
+                size="large"
+                style={{ flex: isMobile ? 1 : "none" }}
+                onClick={() => navigate("/cart")}
+              >
                 去购物车
               </Button>
             </div>
@@ -123,7 +166,7 @@ function ShopDetail() {
           <h2 style={{ marginBottom: 16 }}>同类商品推荐</h2>
           <Row gutter={[16, 16]}>
             {relatedProducts.map((item) => (
-              <Col key={item._id} xs={8} sm={6} md={4}>
+              <Col key={item._id} xs={12} sm={8} md={6}>
                 <Card
                   hoverable
                   cover={
