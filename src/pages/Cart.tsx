@@ -60,8 +60,16 @@ function Cart() {
               }}
             />
           )}
-          <span style={{ display: "inline-block", minWidth: "50px" }}>
-            {isMobile ? name.slice(0, 16) + ".." : name}
+          <span
+            style={{
+              display: "inline-block",
+              maxWidth: isMobile ? 80 : 200,
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {name}
           </span>
         </div>
       ),
@@ -132,6 +140,7 @@ function Cart() {
             dataSource={cartItems}
             rowKey="_id"
             pagination={false}
+            scroll={{ x: "max-content" }}
           />
           <div
             style={{
