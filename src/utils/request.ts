@@ -2,7 +2,7 @@ import axios from "axios";
 
 const BASE_URL = import.meta.env.DEV
   ? "http://localhost:3000/api"
-  : "http://47.82.90.240/api";
+  : "https://xiaoyihao.top/api";
 
 const request = axios.create({
   baseURL: BASE_URL,
